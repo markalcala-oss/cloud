@@ -9,3 +9,16 @@ document.getElementById('contact-form').addEventListener('submit', function(e) {
     }
     alert('Formulario enviado con éxito.');
 });
+
+let currentIndex = 0;
+const images = document.querySelectorAll('#carousel img');
+document.getElementById('next').addEventListener('click', () => {
+    images[currentIndex].classList.add('hidden');
+    currentIndex = (currentIndex + 1) % images.length;
+    images[currentIndex].classList.remove('hidden');
+});
+document.getElementById('prev').addEventListener('click', () => {
+    images[currentIndex].classList.add('hidden');
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    images[currentIndex].classList.remove('hidden');
+});
