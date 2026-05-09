@@ -2,10 +2,19 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Importante para móviles -->
     <title>Sitio Web</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
     <h1 class="text-3xl text-center mt-10">Bienvenidos al Sitio Web</h1>
+    <div class="max-w-md mx-auto mt-10">
+    <form id="contact-form" class="space-y-4 bg-white p-6 rounded-lg shadow-md">
+        <input type="text" id="name" placeholder="Nombre" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+        <input type="email" id="email" placeholder="Correo" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+        <textarea id="message" placeholder="Mensaje" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"></textarea>
+        <button type="submit" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">Enviar</button>
+    </form>
+</div>
 </body>
 </html>
