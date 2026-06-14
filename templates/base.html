@@ -3,32 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CloudContacts</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>CloudContacts - Agenda en la Nube</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
-    <nav class="bg-blue-600 p-4 text-white shadow-md">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <h1 class="text-xl font-bold">☁️ CloudContacts</h1>
-            <div class="space-x-4">
-                <a href="/" class="hover:underline">Formulario</a>
-                <a href="/contacts" class="hover:underline">Ver Contactos</a>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
+            <a href="/" class="text-xl font-bold tracking-wide flex items-center gap-2">
+                ☁️ <span>CloudContacts</span>
+            </a>
+            
+            <div class="flex gap-6 text-sm font-semibold tracking-wide">
+                <a href="/" class="hover:text-blue-200 transition-colors duration-200 pb-1 border-b-2 border-transparent hover:border-blue-200">
+                    📝 Formulario
+                </a>
+                <a href="/contacts" class="hover:text-blue-200 transition-colors duration-200 pb-1 border-b-2 border-transparent hover:border-blue-200">
+                    📋 Ver Contactos
+                </a>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto flex-grow p-4 md:p-8 max-w-4xl">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-          {% if messages %}
-            {% for category, message in messages %}
-              <div class="p-4 mb-4 text-sm rounded-lg {% if category == 'success' %} bg-green-100 text-green-800 {% else %} bg-red-100 text-red-800 {% endif %}">
-                {{ message }}
-              </div>
-            {% endfor %}
-          {% endif %}
-        {% endwith %}
-
-        {% block content %}{% endblock %}
+    <main class="container mx-auto p-4 md:py-8 max-w-6xl">
+        {% block content %}
+        {% endblock %}
     </main>
+
 </body>
 </html>
