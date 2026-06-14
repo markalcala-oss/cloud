@@ -1,20 +1,32 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Importante para móviles -->
-    <title>Sitio Web</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-    <h1 class="text-3xl text-center mt-10">Bienvenidos al Sitio Web</h1>
-    <div class="max-w-md mx-auto mt-10">
-    <form id="contact-form" class="space-y-4 bg-white p-6 rounded-lg shadow-md">
-        <input type="text" id="name" placeholder="Nombre" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
-        <input type="email" id="email" placeholder="Correo" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
-        <textarea id="message" placeholder="Mensaje" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"></textarea>
-        <button type="submit" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">Enviar</button>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white p-6 md:p-10 rounded-lg shadow-md max-w-md mx-auto mt-10">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800 text-center">Registrar Contacto</h2>
+    
+    <form action="/" method="POST" class="space-y-4">
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Nombre Completo *</label>
+            <input type="text" name="nombre" required 
+                   class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Correo Electrónico *</label>
+            <input type="email" name="email" required 
+                   class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div>
+            <label class="block text-gray-700 font-medium mb-1">Teléfono (Opcional)</label>
+            <input type="text" name="telefono" 
+                   class="w-full border border-gray-300 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <button type="submit" 
+                class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold hover:bg-blue-700 transition duration-200">
+            Guardar Contacto
+        </button>
     </form>
 </div>
-</body>
-</html>
+{% endblock %}
