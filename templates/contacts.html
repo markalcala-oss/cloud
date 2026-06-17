@@ -1,54 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto bg-white p-5 sm:p-6 rounded-xl shadow-lg">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h1 class="text-3xl font-bold text-slate-900 mb-8">Panel de Control: Clientes Potenciales (Leads)</h1>
     
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b border-gray-100 pb-4">
-        <div class="text-center sm:text-left">
-            <h2 class="text-2xl font-bold text-gray-800">Contactos Almacenados</h2>
-            <p class="text-gray-500 text-xs mt-0.5">Registros síncronos desde MySQL Server</p>
-        </div>
-        <a href="/" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-2 px-4 rounded-lg shadow-sm transition">
-            ➕ Nuevo Registro
-        </a>
-    </div>
-
-    <div class="w-full overflow-x-auto border border-gray-200 rounded-xl shadow-inner">
-        <table class="w-full text-sm text-left text-gray-500 min-w-[600px]">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
-                <tr>
-                    <th scope="col" class="px-6 py-3.5 font-bold">Nombre Completo</th>
-                    <th scope="col" class="px-6 py-3.5 font-bold">Correo Electrónico</th>
-                    <th scope="col" class="px-6 py-3.5 font-bold">Teléfono</th>
-                    <th scope="col" class="px-6 py-3.5 font-bold">Fecha / Hora Registro</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
-                {% if contactos %}
-                    {% for contacto in contactos %}
-                    <tr class="hover:bg-blue-5/30 transition">
-                        <td class="px-6 py-4 font-semibold text-gray-900">{{ contacto.nombre }}</td>
-                        <td class="px-6 py-4 text-gray-600">{{ contacto.email }}</td>
+    <div class="bg-white shadow-md rounded-xl overflow-hidden border border-gray-200">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-slate-900 text-white text-sm font-semibold uppercase tracking-wider">
+                        <th class="px-6 py-4">ID</th>
+                        <th class="px-6 py-4">Nombre Completo</th>
+                        <th class="px-6 py-4">Email</th>
+                        <th class="px-6 py-4">Teléfono</th>
+                        <th class="px-6 py-4">Servicio Solicitado</th>
+                        <th class="px-6 py-4">Fecha Registro</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200 text-sm text-gray-700">
+                    {% for lead in leads %}
+                    <tr class="hover:bg-gray-50 transition duration-150">
+                        <td class="px-6 py-4 font-bold text-slate-900">{{ lead.id }}</td>
+                        <td class="px-6 py-4 font-medium">{{ lead.nombre_completo }}</td>
+                        <td class="px-6 py-4 text-gray-600">{{ lead.email }}</td>
+                        <td class="px-6 py-4 text-gray-600">{{ lead.telefono }}</td>
                         <td class="px-6 py-4">
-                            {% if contacto.telefono %}
-                                <span class="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">{{ contacto.telefono }}</span>
-                            {% else %}
-                                <span class="text-gray-300 italic">No asignado</span>
-                            {% endif %}
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                {{ lead.interes_servicio }}
+                            </span>
                         </td>
-                        <td class="px-6 py-4 text-xs text-gray-400 font-mono">{{ contacto.fecha_registro }}</td>
+                        <td class="px-6 py-4 text-gray-500">{{ lead.fecha_registro }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-10 text-center text-gray-500">No hay leads registrados actualmente.</td>
                     </tr>
                     {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="4" class="px-6 py-10 text-center text-gray-400 italic">
-                            No hay contactos registrados todavía en la base de datos.
-                        </td>
-                    </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
 {% endblock %}

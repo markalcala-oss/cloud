@@ -1,30 +1,50 @@
-import os
-import mysql.connector
-from contextlib import contextmanager
-from dotenv import load_dotenv
+import sqlite3
 
-load_dotenv()
+def get_connection():
+    # Esto creará un archivo llamado 'local_leads.db' en la raíz de tu proyecto
+    conn = sqlite3.connect("local_leads.db")
+    conn.row_factory = sqlite3.Row  # Permite que Flask lea los datos como diccionarios
+    return conn
 
-@contextmanager
-def get_db_cursor():
-    connection = None
-    cursor = None
+def init_db():
+    connection = get_connection()
     try:
-        connection = mysql.connector.connect(
-            host=os.getenv("DB_HOST"),       # Aquí irá la IP Privada de EC2-DB
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_NAME")
-        )
-        cursor = connection.cursor(dictionary=True)
-        yield connection, cursor
+        cursor = connection.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS leads (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre_completo TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            telefono TEXT NOT NULL,
+            interes_servicio TEXT NOT NULL,
+            fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
         connection.commit()
-    except mysql.connector.Error as err:
-        if connection:
-            connection.rollback()
-        raise err
     finally:
-        if cursor:
-            cursor.close()
-        if connection:
-            connection.close()
+        connection.close()
+
+def insert_lead(nombre, email, telefono, servicio):
+    connection = get_connection()
+    try:
+        cursor = connection.cursor()
+        sql = """
+        INSERT INTO leads (nombre_completo, email, telefono, interes_servicio)
+        VALUES (?, ?, ?, ?);
+        """
+        cursor.execute(sql, (nombre, email, telefono, servicio))
+        connection.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False  # Si el correo está repetido
+    finally:
+        connection.close()
+
+def get_all_leads():
+    connection = get_connection()
+    try:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM leads ORDER BY fecha_registro DESC;")
+        return [dict(row) for row in cursor.fetchall()]
+    finally:
+        connection.close()

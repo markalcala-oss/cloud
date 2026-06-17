@@ -1,42 +1,42 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from database import get_db_cursor
-import mysql.connector
+from database import init_db, insert_lead, get_all_leads
 
 app = Flask(__name__)
-app.secret_key = 'un_secreto_muy_seguro_para_los_flashes'
+app.secret_key = 'clave_secreta_para_flash_messages' # Necesario para mostrar alertas de éxito/error
+
+# Inicializar la base de datos al arrancar la app
+init_db()
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        nombre = request.form.get('nombre')
+        nombre = request.form.get('nombre_completo')
         email = request.form.get('email')
-        telefono = request.form.get('telefono') or None
-
-        try:
-            with get_db_cursor() as (conn, cursor):
-                query = "INSERT INTO contactos (nombre, email, telefono) VALUES (%s, %s, %s)"
-                cursor.execute(query, (nombre, email, telefono))
-            flash("¡Contacto guardado exitosamente!", "success")
-            return redirect(url_for('contacts'))
+        telefono = request.form.get('telefono')
+        servicio = request.form.get('interes_servicio')
         
-        except mysql.connector.Error as err:
-            if err.errno == 1062: # Código de error para duplicados (UNIQUE)
-                flash("Error: El correo electrónico ya está registrado.", "error")
-            else:
-                flash(f"Error de conexión a la base de datos: {err}", "error")
-                
+        # Validación básica en el backend
+        if not nombre or not email or not telefono or not servicio:
+            flash('Todos los campos son obligatorios.', 'error')
+            return redirect(url_for('index'))
+            
+        # Intentar insertar en la base de datos AWS RDS
+        exito = insert_lead(nombre, email, telefono, servicio)
+        
+        if exito:
+            flash('¡Registro exitoso! Nos pondremos en contacto contigo pronto.', 'success')
+        else:
+            flash('Hubo un error al registrar tus datos. Es posible que el correo ya esté registrado.', 'error')
+            
+        return redirect(url_for('index'))
+        
     return render_template('index.html')
 
 @app.route('/contacts')
 def contacts():
-    try:
-        with get_db_cursor() as (conn, cursor):
-            cursor.execute("SELECT nombre, email, telefono, fecha_registro FROM contactos ORDER BY fecha_registro DESC")
-            lista_contactos = cursor.fetchall()
-        return render_template('contacts.html', contactos=lista_contactos)
-    except mysql.connector.Error as err:
-        flash(f"No se pudieron cargar los contactos: {err}", "error")
-        return render_template('contacts.html', contactos=[])
+    # Esta ruta servirá para ver la lista de leads capturados (CRUD - SELECT)
+    leads = get_all_leads()
+    return render_template('contacts.html', leads=leads)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
